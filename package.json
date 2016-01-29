@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Start fast !",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mejjjor/starter-kit_es6.git"
