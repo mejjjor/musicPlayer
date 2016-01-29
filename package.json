@@ -1,0 +1,22 @@
+{
+  "name": "starter-kit_es6",
+  "version": "1.0.0",
+  "description": "Start fast !",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mejjjor/starter-kit_es6.git"
+  },
+  "author": "Mejjjor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mejjjor/starter-kit_es6/issues"
+  },
+  "homepage": "https://github.com/mejjjor/starter-kit_es6#readme",
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "browserify": "^13.0.0",
+    "pleeease": "^4.0.4"
+  }
+}
