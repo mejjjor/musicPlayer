@@ -6,10 +6,7 @@ var domReady = function(callback) {
 
 domReady(function() {
 
-var myClass = new MyClass("Erik");
-
-
-    document.getElementById("title").innerHTML += ", " + myClass.getAttr();
+var myClass = new MyClass(document.getElementById("audio"));
 });
 
 

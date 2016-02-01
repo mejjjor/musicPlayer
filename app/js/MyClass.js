@@ -1,11 +1,7 @@
-class MyClass {
-    constructor(attr) {
-        this.attr = attr;
-    }
-
-    getAttr() {
-        return this.attr;
+export default class Player {
+    constructor(div) {
+        var audio = document.createElement("audio");
+        audio.setAttribute("controls","");
+        div.appendChild(audio);
     }
 }
-
-module.exports = MyClass;
