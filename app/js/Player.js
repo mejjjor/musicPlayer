@@ -29,7 +29,7 @@ export default class Player {
         var sortable = Sortable.create(this.playlist, {
             animation: 150,
             onEnd: (evt) => {
-            	let el = this.dataPlaylist[this.currentIndex];
+                let el = this.dataPlaylist[this.currentIndex];
                 this.dataPlaylist.splice(evt.newIndex, 0, this.dataPlaylist.splice(evt.oldIndex, 1)[0]);
                 this.currentIndex = this.dataPlaylist.indexOf(el);
             }
@@ -88,18 +88,23 @@ export default class Player {
     }
 
     playNext() {
-        if (this.currentIndex < this.dataPlaylist.length) {
+        if (this.currentIndex < this.dataPlaylist.length && this.currentIndex != -1) {
             this.playTrack(this.dataPlaylist[this.currentIndex + 1]);
         }
     }
 
     playTrack(file) {
-        this.audio.setAttribute("src", URL.createObjectURL(file));
-        this.audio.play();
-        this.playlist.childNodes[this.currentIndex].className = "";
-        this.currentIndex = this.dataPlaylist.indexOf(file);
-        this.playlist.childNodes[this.currentIndex].className = "currentTrack";
-
+        if (this.currentIndex != -1) {
+            this.playlist.childNodes[this.currentIndex].className = "";
+        }
+        if (file != undefined) {
+            this.audio.setAttribute("src", URL.createObjectURL(file));
+            this.audio.play();
+            this.currentIndex = this.dataPlaylist.indexOf(file);
+            if (this.currentIndex != -1) {
+                this.playlist.childNodes[this.currentIndex].className = "currentTrack";
+            }
+        }
     }
 
     getFiles(files) {
