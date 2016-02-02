@@ -58,15 +58,33 @@ export default class Player {
     }
 
     addToPlaylist(data, file) {
-
+        var dataFile = {
+            file: file,
+            url: URL.createObjectURL(file)
+        }
+        this.dataPlaylist.push(dataFile);
         var playlistItem = document.createElement("li");
         playlistItem.setAttribute("draggable", "true");
-        var icon = document.createElement("i");
-        icon.className = "fa fa-play-circle fa-3x";
-        icon.addEventListener("click", () => {
-            this.playTrack(file);
+        var iconPlay = document.createElement("i");
+        iconPlay.className = "fa fa-play-circle fa-3x";
+        var audio = this.audio;
+        ((audio) => {
+            iconPlay.addEventListener("click", () => {
+                if (audio.currentSrc === dataFile.url) {
+                    audio.play();
+                } else {
+                    this.playTrack(dataFile);
+                }
+            });
+        })(audio);
+
+        var iconPause = document.createElement("i");
+        iconPause.className = "fa fa-pause-circle fa-3x";
+        iconPause.addEventListener("click", () => {
+            this.audio.pause();
         });
-        playlistItem.appendChild(icon);
+        playlistItem.appendChild(iconPlay);
+        playlistItem.appendChild(iconPause);
         var trackInfo = document.createElement("div");
         var artist = document.createElement("div");
         // var regex = /\w(\w| )+\w[^.mp3| |.acc]/g;
@@ -84,7 +102,6 @@ export default class Player {
         userInfo.innerHTML = "	user + picture !"
         playlistItem.appendChild(userInfo);
         this.playlist.appendChild(playlistItem);
-        this.dataPlaylist.push(file);
     }
 
     playNext() {
@@ -93,14 +110,14 @@ export default class Player {
         }
     }
 
-    playTrack(file) {
+    playTrack(dataFile) {
         if (this.currentIndex != -1) {
             this.playlist.childNodes[this.currentIndex].className = "";
         }
-        if (file != undefined) {
-            this.audio.setAttribute("src", URL.createObjectURL(file));
+        if (dataFile != undefined) {
+            this.audio.setAttribute("src", dataFile.url);
             this.audio.play();
-            this.currentIndex = this.dataPlaylist.indexOf(file);
+            this.currentIndex = this.dataPlaylist.indexOf(dataFile);
             if (this.currentIndex != -1) {
                 this.playlist.childNodes[this.currentIndex].className = "currentTrack";
             }
