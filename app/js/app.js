@@ -1,5 +1,6 @@
 import Player from "./Player";
 var $ = require('jquery');
+require('jquery-ui');
 
 var domReady = function(callback) {
     document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
@@ -16,7 +17,7 @@ function tplawesome(e, t) {
             return t[n][r]
         })
     }
-    return res
+    return res;
 }
 
 $(function() {
@@ -26,10 +27,8 @@ $(function() {
         var request = gapi.client.youtube.search.list({
             part: "snippet",
             type: "video",
-            q: encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
-            maxResults: 3,
-            order: "viewCount",
-            publishedAfter: "2015-01-01T00:00:00Z"
+            q: encodeURIComponent(document.getElementById("search").value).replace(/%20/g, "+"),
+            maxResults: 10
         });
         // execute the request
         request.execute(function(response) {
@@ -53,4 +52,3 @@ $(function() {
 function resetVideoHeight() {
     $(".video").css("height", $("#results").width() * 9 / 16);
 }
-

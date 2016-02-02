@@ -1,0 +1,4 @@
+- soundcloud api
+- autocomplete sur youtube et soundcloud
+- play une video youtube à la demande
+- controle séparé de la vidéo utube

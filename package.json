@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "mkdir -p public/ && rm -rf public/*",
     "build:assets": "cp -r app/assets/* public/ ",
-    "build:scripts": "mkdir -p public/js && browserify --debug app/js/app.js -o public/js/app.js -t babelify",
+    "build:scripts": "mkdir -p public/js && browserify app/js/app.js -o public/js/app.js -t babelify",
     "build:css": "mkdir -p public/css && pleeease compile node_modules/normalize.css/normalize.css node_modules/font-awesome/css/font-awesome.min.css app/css/* to public/css/app.css ",
     "build": "npm run build:scripts && npm run build:assets && npm run build:css",
     "dev": "npm run clean && npm run build && npm run watch",
