@@ -70,7 +70,7 @@ export default class Player {
         var audio = this.audio;
         ((audio) => {
             iconPlay.addEventListener("click", () => {
-                if (audio.currentSrc === dataFile.url) {
+                if (audio.currentSrc === dataFile.url && !audio.ended) {
                     audio.play();
                 } else {
                     this.playTrack(dataFile);
