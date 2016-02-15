@@ -2,6 +2,8 @@ var jsmediatags = require("jsmediatags");
 var Sortable = require("./sortable");
 var _ = require("lodash");
 
+var $ = require("jquery");
+
 export default class Player {
     constructor(div) {
         //audio player
@@ -102,11 +104,11 @@ export default class Player {
         });
     }
 
-    addToPlaylist(data, file) {
+    addFileToPlaylist(data, file) {
         var dataFile = {
             file: file,
             url: URL.createObjectURL(file)
-        }
+        };
         this.dataPlaylist.push(dataFile);
         var playlistItem = document.createElement("li");
         playlistItem.setAttribute("draggable", "true");
@@ -153,6 +155,29 @@ export default class Player {
         this.playlist.appendChild(playlistItem);
     }
 
+    addVideoToPlaylist(data, videoId) {
+        var dataFile = {
+            videoId: videoId
+        };
+        this.dataPlaylist.push(dataFile);
+        var playlistItem = document.createElement("li");
+        playlistItem.setAttribute("draggable", "true");
+
+        var iconPlay = document.createElement("i");
+        iconPlay.className = "fa fa-play-circle fa-3x";
+        iconPlay.addEventListener("click", function() {
+            console.log("play video with id "+videoId);
+        });
+        playlistItem.appendChild(iconPlay);
+        var trackInfo = document.createElement("div");
+        trackInfo.innerHTML = data;
+        playlistItem.appendChild(trackInfo);
+        var userInfo = document.createElement("div");
+        userInfo.innerHTML = "  user + picture !"
+        playlistItem.appendChild(userInfo);
+        this.playlist.appendChild(playlistItem);
+    }
+
     playNext() {
         if (this.currentIndex < this.dataPlaylist.length && this.currentIndex != -1) {
             this.playlist.childNodes[this.currentIndex + 1].childNodes[0].style.display = 'none';
@@ -183,7 +208,7 @@ export default class Player {
             ((file) => {
                 jsmediatags.read(file, {
                     onSuccess: (tag) => {
-                        this.addToPlaylist(tag.tags, file);
+                        this.addFileToPlaylist(tag.tags, file);
                     },
                     onError: function(error) {
                         console.log(error.info);
