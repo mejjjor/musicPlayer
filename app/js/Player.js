@@ -6,7 +6,6 @@ export default class Player {
     constructor(div) {
         //audio player
         this.audio = document.createElement("audio");
-        this.audio.setAttribute("controls", "");
         div.appendChild(this.audio);
         this.audio.onended = () => {
             this.playNext();
@@ -23,6 +22,52 @@ export default class Player {
             this.getFiles(_.values(e.dataTransfer.files));
 
         }, true);
+
+        //control
+        var progressTime = document.createElement("input");
+        progressTime.setAttribute("min", 0);
+        progressTime.setAttribute("max", 100);
+        progressTime.setAttribute("value", 0);
+        progressTime.setAttribute("type", "range");
+        div.appendChild(progressTime);
+        progressTime.addEventListener("input", () => {
+            if (this.audio.currentSrc != "") {
+                this.audio.currentTime = this.audio.duration * progressTime.value / 100;
+            } else {
+                progressTime.value = 0;
+            }
+        }, false);
+
+        var timer = document.createElement("span");
+        div.appendChild(timer);
+
+        this.audio.addEventListener("timeupdate", () => {
+            progressTime.value = this.audio.currentTime * 100 / this.audio.duration;
+            timer.innerHTML = this.formatTime(this.audio.currentTime);
+        });
+
+        var volumeOn = document.createElement("i");
+        volumeOn.className = "fa fa-volume-up fa-2x";
+        volumeOn.style.display = 'none';
+        div.appendChild(volumeOn);
+
+        var volumeOff = document.createElement("i");
+        volumeOff.className = "fa fa-volume-off fa-2x";
+        div.appendChild(volumeOff);
+        volumeOn.addEventListener("click", () => {
+            if (this.audio.currentSrc != "") {
+                this.audio.volume = 1;
+                volumeOn.style.display = 'none';
+                volumeOff.style.display = 'inline';
+            }
+        }, false);
+        volumeOff.addEventListener("click", () => {
+            if (this.audio.currentSrc != "") {
+                this.audio.volume = 0;
+                volumeOn.style.display = 'inline';
+                volumeOff.style.display = 'none';
+            }
+        }, false);
 
         //playlist
         this.playlist = document.createElement("ol");
@@ -65,24 +110,28 @@ export default class Player {
         this.dataPlaylist.push(dataFile);
         var playlistItem = document.createElement("li");
         playlistItem.setAttribute("draggable", "true");
+        var iconPause = document.createElement("i");
+        iconPause.className = "fa fa-pause-circle fa-3x";
+        iconPause.style.display = 'none';
+        iconPause.addEventListener("click", () => {
+            this.audio.pause();
+            iconPause.style.display = 'none';
+            iconPlay.style.display = 'block';
+        });
+
         var iconPlay = document.createElement("i");
         iconPlay.className = "fa fa-play-circle fa-3x";
         var audio = this.audio;
-        ((audio) => {
-            iconPlay.addEventListener("click", () => {
-                if (audio.currentSrc === dataFile.url && !audio.ended) {
-                    audio.play();
-                } else {
-                    this.playTrack(dataFile);
-                }
-            });
-        })(audio);
-
-        var iconPause = document.createElement("i");
-        iconPause.className = "fa fa-pause-circle fa-3x";
-        iconPause.addEventListener("click", () => {
-            this.audio.pause();
+        iconPlay.addEventListener("click", () => {
+            if (audio.currentSrc === dataFile.url && !audio.ended) {
+                audio.play();
+            } else {
+                this.playTrack(dataFile);
+            }
+            iconPause.style.display = 'block';
+            iconPlay.style.display = 'none';
         });
+
         playlistItem.appendChild(iconPlay);
         playlistItem.appendChild(iconPause);
         var trackInfo = document.createElement("div");
@@ -99,20 +148,25 @@ export default class Player {
         trackInfo.appendChild(title);
         playlistItem.appendChild(trackInfo);
         var userInfo = document.createElement("div");
-        userInfo.innerHTML = "	user + picture !"
+        userInfo.innerHTML = "  user + picture !"
         playlistItem.appendChild(userInfo);
         this.playlist.appendChild(playlistItem);
     }
 
     playNext() {
         if (this.currentIndex < this.dataPlaylist.length && this.currentIndex != -1) {
+            this.playlist.childNodes[this.currentIndex + 1].childNodes[0].style.display = 'none';
+            this.playlist.childNodes[this.currentIndex + 1].childNodes[1].style.display = 'block';
             this.playTrack(this.dataPlaylist[this.currentIndex + 1]);
         }
     }
 
     playTrack(dataFile) {
+
         if (this.currentIndex != -1) {
             this.playlist.childNodes[this.currentIndex].className = "";
+            this.playlist.childNodes[this.currentIndex].childNodes[0].style.display = 'block';
+            this.playlist.childNodes[this.currentIndex].childNodes[1].style.display = 'none';
         }
         if (dataFile != undefined) {
             this.audio.setAttribute("src", dataFile.url);
@@ -137,5 +191,16 @@ export default class Player {
                 });
             })(file);
         }
+    }
+
+    formatTime(time) {
+        if (isNaN(time)) {
+            return "0 : 0";
+        }
+        time = Math.round(time);
+        var minutes = Math.floor(time / 60),
+            seconds = time - minutes * 60;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        return minutes + ":" + seconds;
     }
 }

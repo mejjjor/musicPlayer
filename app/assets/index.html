@@ -14,27 +14,17 @@
 <body>
     <!-- <h1 id="title">Music Player <i class="fa fa-play-circle"></i></h1> -->
     <div id="audio"></div>
-    <form action="#">
-        <!-- <input type="text" id="search" placeholder="Type something..." autocomplete="off" /> -->
-        <div id="search"></div>
-        <input type="submit" value="Search">
-    </form>
+    <div id ="audio-ctrl">
+    </div>
+    <div id="search"></div>
     <div id="suggestion"></div>
     <div id="results"></div>
-
-
-
+    <button id="play" value="0" max="100">play</button>
+    <button id="pause" value="0" max="100">pause</button>
+    <!-- <div id="video-placeholder"></div> -->
     <script type="text/javascript" src="js/app.js"></script>
-    <script type="text/javascript">
-    function init() {
-        gapi.client.setApiKey("AIzaSyDrc_XoIlz_HqMflR0CHHOyatGemqwgAvo");
-        gapi.client.load("youtube", "v3", function() {
-            // yt api is ready
-            console.log("readYYYYYY");
-        });
-    }
-    </script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 
 </html>
