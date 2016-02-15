@@ -4,6 +4,7 @@ var $ = require("jquery");
 var _ = require("lodash");
 
 var player;
+var musicPlayer;
 
 var domReady = function(callback) {
     document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
@@ -11,7 +12,7 @@ var domReady = function(callback) {
 
 
 domReady(function() {
-    var musicPlayer = new Player(document.getElementById("audio"));
+    musicPlayer = new Player(document.getElementById("audio"));
     var search = new Search(document.getElementById('search'), musicPlayer);
 });
 
@@ -32,17 +33,17 @@ global.init = function() {
 }
 
 global.initialize = function() {
+    musicPlayer.initializedVideo();
+    // // Update the controls on load
+    // updateTimerDisplay();
+    // updateProgressBar();
 
-    // Update the controls on load
-    updateTimerDisplay();
-    updateProgressBar();
-
-    // Clear any old interval.
-    var time_update_interval = setInterval(function() {
-        updateTimerDisplay();
-        updateProgressBar();
-    }, 1000)
-    clearInterval(time_update_interval);
+    // // Clear any old interval.
+    // var time_update_interval = setInterval(function() {
+    //     updateTimerDisplay();
+    //     updateProgressBar();
+    // }, 1000)
+    // clearInterval(time_update_interval);
 
     // Start interval to update elapsed time display and
     // the elapsed part of the progress bar every second.
@@ -83,9 +84,9 @@ function updateProgressBar() {
 }
 
 $('#play').on('click', function() {
-    player.playVideo();
+   // player.playVideo();
 });
 
 $('#pause').on('click', function() {
-    player.pauseVideo();
+   // player.pauseVideo();
 });

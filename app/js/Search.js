@@ -2,7 +2,7 @@ var Completely = require("./complete.ly.1.0.1.min.js");
 
 var $ = require("jquery");
 
-export default class Player {
+export default class Search {
     constructor(search, musicPlayer) {
         this.musicPlayer = musicPlayer;
         this.suggest = Completely.completely(search, {
@@ -39,7 +39,6 @@ export default class Player {
         this.suggest.input.addEventListener("click", (e) => {
             this.suggestionEvent(e);
         }, true);
-
     }
 
     suggestionEvent(e) {

@@ -163,12 +163,23 @@ export default class Player {
         var playlistItem = document.createElement("li");
         playlistItem.setAttribute("draggable", "true");
 
+        var iconPause = document.createElement("i");
+        iconPause.className = "fa fa-pause-circle fa-3x";
+        iconPause.style.display = 'none';
         var iconPlay = document.createElement("i");
         iconPlay.className = "fa fa-play-circle fa-3x";
-        iconPlay.addEventListener("click", function() {
-            console.log("play video with id "+videoId);
+        iconPlay.addEventListener("click", () => {
+            this.playVideo(videoId);
+            iconPause.style.display = 'block';
+            iconPlay.style.display = 'none';
+        });
+        iconPause.addEventListener("click", () => {
+            this.videoPlayer.pauseVideo();
+            iconPause.style.display = 'none';
+            iconPlay.style.display = 'block';
         });
         playlistItem.appendChild(iconPlay);
+        playlistItem.appendChild(iconPause);
         var trackInfo = document.createElement("div");
         trackInfo.innerHTML = data;
         playlistItem.appendChild(trackInfo);
@@ -176,6 +187,34 @@ export default class Player {
         userInfo.innerHTML = "  user + picture !"
         playlistItem.appendChild(userInfo);
         this.playlist.appendChild(playlistItem);
+    }
+
+    initializedVideo() {
+        this.videoPlayer.playVideo();
+    }
+
+    playVideo(videoId) {
+        if (this.videoPlayer != undefined && this.videoPlayer.getPlayerState() === 2) {
+            this.videoPlayer.playVideo();
+            return;
+        }
+        var videoContainer = document.getElementById('video-container');
+        videoContainer.innerHTML = "";
+        var iframe = document.createElement("div");
+        iframe.setAttribute("id", "video-placeholder")
+        videoContainer.appendChild(iframe);
+        this.videoPlayer = new YT.Player('video-placeholder', {
+            width: 600,
+            height: 400,
+            videoId: videoId,
+            events: {
+                onReady: initialize
+            }
+        });
+    }
+
+    getVideoPlayer() {
+        return this.videoPlayer;
     }
 
     playNext() {
@@ -187,15 +226,18 @@ export default class Player {
     }
 
     playTrack(dataFile) {
-
         if (this.currentIndex != -1) {
             this.playlist.childNodes[this.currentIndex].className = "";
             this.playlist.childNodes[this.currentIndex].childNodes[0].style.display = 'block';
             this.playlist.childNodes[this.currentIndex].childNodes[1].style.display = 'none';
         }
         if (dataFile != undefined) {
-            this.audio.setAttribute("src", dataFile.url);
-            this.audio.play();
+            if (dataFile.url != undefined) {
+                this.audio.setAttribute("src", dataFile.url);
+                this.audio.play();
+            } else if (dataFile.videoId != undefined) {
+                this.playVideo(dataFile.videoId);
+            }
             this.currentIndex = this.dataPlaylist.indexOf(dataFile);
             if (this.currentIndex != -1) {
                 this.playlist.childNodes[this.currentIndex].className = "currentTrack";
